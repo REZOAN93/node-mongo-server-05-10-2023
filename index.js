@@ -50,6 +50,28 @@ async function run() {
       console.log(result);
       res.send(result);
     });
+
+    app.put("/users/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const user = req.body;
+      const options = { upsert: true };
+      const updateuser = {
+        $set: {
+          name: user.name,
+          address: user.address,
+          phone: user.phone,
+          email: user.email,
+        },
+      };
+
+      const result = await userCollection.updateOne(
+        filter,
+        updateuser,
+        options
+      );
+      res.send(result);
+    });
   } finally {
     // // Ensures that the client will close when you finish/error
     // await client.close();
